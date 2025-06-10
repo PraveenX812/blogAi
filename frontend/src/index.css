@@ -1,0 +1,10 @@
+@import "tailwindcss";
+*{
+  font-family: sans-serif;
+}
+::-webkit-scrollbar {
+  display: none;
+}
+@theme {
+  --color-primary: #5044E5;
+}
