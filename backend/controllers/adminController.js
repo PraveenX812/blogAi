@@ -19,52 +19,55 @@ export const adminLogin = async (req, res) => {
   }
 };
 
-export const getAllBlogsAdmin = async (req,res) => {
+export const getAllBlogsAdmin = async (req, res) => {
   try {
-    const blogs = await Blog.find({}).sort({createdAt: -1});
-    res.json({success:true, blogs});
+    const blogs = await Blog.find({}).sort({ createdAt: -1 });
+    res.json({ success: true, blogs });
   } catch (error) {
     res.json({ sucess: false, message: error.message });
   }
-}
+};
 
-export const getAllComments = async (req,res) => {
+export const getAllComments = async (req, res) => {
   try {
-    const comments = await Comment.find({}).populate("blog").sort({createdAt:-1})
-    res.json({success:true, comments});
+    const comments = await Comment.find({})
+      .populate("blog")
+      .sort({ createdAt: -1 });
+    res.json({ success: true, comments });
   } catch (error) {
     res.json({ sucess: false, message: error.message });
   }
-}
+};
 
-export const GetDashboard = async (req,res) => {
+export const GetDashboard = async (req, res) => {
   try {
-    const recentBlogs = await Blog.find({}).sort({createdBy: -1}).limit(5)
-    const blogs = await Blog.countDocuments(), comments = await Comment.countDocuments(),
-          drafts = await Blog.countDocuments({isPublished: false})
-    const dashboardData = {blogs, comments, drafts, recentBlogs}
-    res.json({success: true, dashboardData})
+    const recentBlogs = await Blog.find({}).sort({ createdBy: -1 }).limit(5);
+    const blogs = await Blog.countDocuments(),
+      comments = await Comment.countDocuments(),
+      drafts = await Blog.countDocuments({ isPublished: false });
+    const dashboardData = { blogs, comments, drafts, recentBlogs };
+    res.json({ success: true, dashboardData });
   } catch (error) {
     res.json({ sucess: false, message: error.message });
   }
-}
+};
 
-export const deleteCommentById = async(req,res) => {
+export const deleteCommentById = async (req, res) => {
   try {
-    const {id} = req.body;
+    const { id } = req.body;
     await Comment.findByIdAndDelete(id);
-    res.json({success: true, message:"Comment del"});
+    res.json({ success: true, message: "Comment del" });
   } catch (error) {
     res.json({ sucess: false, message: error.message });
   }
-}
+};
 
-export const approveCommentById = async(req,res) => {
+export const approveCommentById = async (req, res) => {
   try {
-    const {id} = req.body;
-    await Comment.findByIdAndUpdate(id, {isApproved: true});
-    res.json({success: true, message:"Comment approved successfully"});
+    const { id } = req.body;
+    await Comment.findByIdAndUpdate(id, { isApproved: true });
+    res.json({ success: true, message: "Comment approved successfully" });
   } catch (error) {
     res.json({ sucess: false, message: error.message });
   }
-}
+};
