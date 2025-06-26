@@ -10,19 +10,23 @@ export const adminLogin = async (req, res) => {
       email !== process.env.ADMIN_EMAIL ||
       password !== process.env.ADMIN_PASSWORD
     ) {
-      return res.json({ sucess: false, message: "Inv credentials" });
+      return res.json({ success: false, message: "Invalid credentials" });
     }
-    const token = jwt.sign({ email }, process.env.JWT_SECRET);
-    res.json({ sucess: true, token });
+
+    const token = jwt.sign({ email }, process.env.JWT_SECRET, {
+      expiresIn: "1d", // optional: token expiry
+    });
+
+    res.json({ success: true, token });
   } catch (error) {
-    res.json({ sucess: false, message: error.message });
+    res.json({ success: false, message: error.message });
   }
 };
 
-export const getAllBlogsAdmin = async (req, res) => {
+export const getAllblogAdmin = async (req, res) => {
   try {
-    const blogs = await Blog.find({}).sort({ createdAt: -1 });
-    res.json({ success: true, blogs });
+    const blog = await Blog.find({}).sort({ createdAt: -1 });
+    res.json({ success: true, blog });
   } catch (error) {
     res.json({ sucess: false, message: error.message });
   }
@@ -41,11 +45,11 @@ export const getAllComments = async (req, res) => {
 
 export const GetDashboard = async (req, res) => {
   try {
-    const recentBlogs = await Blog.find({}).sort({ createdBy: -1 }).limit(5);
-    const blogs = await Blog.countDocuments(),
+    const recentblog = await Blog.find({}).sort({ createdBy: -1 }).limit(5);
+    const blog = await Blog.countDocuments(),
       comments = await Comment.countDocuments(),
       drafts = await Blog.countDocuments({ isPublished: false });
-    const dashboardData = { blogs, comments, drafts, recentBlogs };
+    const dashboardData = { blog, comments, drafts, recentblog };
     res.json({ success: true, dashboardData });
   } catch (error) {
     res.json({ sucess: false, message: error.message });

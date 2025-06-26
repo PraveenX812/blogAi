@@ -253,10 +253,10 @@ export const comments_data = [
 ];
 
 export const dashboard_data = {
-  blogs: 10,
+  blog: 10,
   comments: 5,
   drafts: 0,
-  recentBlogs: blog_data.slice(0, 5),
+  recentblog: blog_data.slice(0, 5),
 };
 
 export const footer_data = [

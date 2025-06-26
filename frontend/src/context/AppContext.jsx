@@ -1,5 +1,5 @@
-import { createContext, useContext, useEffect, useState  } from "react";
-import { useNavigate} from "react-router-dom";
+import { createContext, useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 
@@ -9,24 +9,24 @@ const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
   const navigate = useNavigate();
-  const [token, settoken] = useState(null);
-  const [blog, setblog] = useState([]);
+  const [token, setToken] = useState(null);
+  const [blog, setBlog] = useState([]);
   const [input, setinput] = useState("");
 
-  const fetchBlogs = async () => {
+  const fetchblog = async () => {
     try {
       const { data } = await axios.get("/api/blog/all");
-      data.success ? setblog(data.blog) : toast.error(data.message);
+      data.success ? setBlog(data.blog) : toast.error(data.message);
     } catch (error) {
       toast.error(error.message);
     }
   };
 
   useEffect(() => {
-    fetchBlogs();
+    fetchblog();
     const token = localStorage.getItem("token");
     if (token) {
-      settoken(token);
+      setToken(token);
       axios.defaults.headers.common["Authorization"] = `${token}`;
     }
   }, []);
@@ -35,9 +35,9 @@ export const AppProvider = ({ children }) => {
     axios,
     navigate,
     token,
-    settoken,
+    setToken,
     blog,
-    setblog,
+    setBlog,
     input,
     setinput,
   };
