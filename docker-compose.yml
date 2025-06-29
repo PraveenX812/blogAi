@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:6
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - blogAI
+
+  backend: 
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend:/server
+      - /server/node_modules
+    networks:
+      - blogAI
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mongo
+    working_dir: /server
+    command: npm run server
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - blogAI
+    working_dir: /app
+    command: npm run dev
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+volumes:
+  mongo_data:
+
+networks:
+  blogAI:
+    driver: bridge
